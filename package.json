@@ -1,7 +1,12 @@
 {
   "name": "doacao-sangue",
+  "user": "fabriciomss",
   "private": true,
-  "version": "0.0.0",
+  "dockerhubPush": true,
+  "port": "5173",
+  "slack": "U07LFBRN95J",
+  "version": "1.0.0",
+  "expose": "3010",
   "type": "module",
   "scripts": {
     "dev": "vite",
