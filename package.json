@@ -1,5 +1,5 @@
 {
-  "name": "doacao-sangue",
+  "name": "front-doacao-sangue",
   "user": "fabriciomss",
   "private": true,
   "dockerhubPush": true,
