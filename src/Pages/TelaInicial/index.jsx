@@ -5,30 +5,49 @@ import LogoSTTP from "../../../public/sttp_marca_app.png";
 import LogoCampinaGrande from "../../../public/logo pmcg_Prancheta 1.png";
 import React from "react";
 import BotaoComum from "../../Components/Botao";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function TelaInicial() {
     const [nome, setNome] = React.useState("");
-    const [matricula, setMatricula] = React.useState("");
+    const [cpf, setCpf] = React.useState("");
     const [telefone, setTelefone] = React.useState("");
+    const [loading, setLoading] = React.useState(false);
 
     const limparCampos = () => {
         setNome("");
-        setMatricula("");
+        setCpf("");
         setTelefone("");
     };
 
-    const submitForm = async e => {
+    const handleCpfChange = (value) => {
+        // Remove qualquer caractere que não seja número
+        const numericValue = value.replace(/\D/g, "");
+
+        // Aplica a máscara
+        const maskedValue = numericValue
+            .replace(/(\d{3})(\d)/, "$1.$2")
+            .replace(/(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+            .replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4")
+            .slice(0, 14);
+
+        setCpf(maskedValue);
+    };
+
+    const submitForm = async (e) => {
         e.preventDefault();
-        if (!nome || !matricula || !telefone) {
+
+        if (!nome || !cpf || !telefone) {
             alert("Por favor, preencha todos os campos antes de enviar.");
             return;
         }
 
         const data = {
-            Matricula: matricula,
             Nome: nome,
+            CPF: cpf,
             Telefone: telefone,
         };
+
+        setLoading(true);
 
         try {
             const response = await fetch(
@@ -41,6 +60,7 @@ export default function TelaInicial() {
                     body: JSON.stringify(data),
                 }
             );
+
             if (response.ok) {
                 alert("Dados enviados com sucesso!");
                 limparCampos();
@@ -50,6 +70,8 @@ export default function TelaInicial() {
         } catch (error) {
             console.error("Erro ao enviar os dados:", error);
             alert("Erro ao enviar os dados.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -118,10 +140,10 @@ export default function TelaInicial() {
                         placeholder="Digite seu nome completo"
                     />
                     <InputTexto
-                        label="Matrícula"
-                        value={matricula}
-                        setValue={setMatricula}
-                        placeholder="Digite sua matrícula"
+                        label="CPF"
+                        value={cpf}
+                        setValue={handleCpfChange}
+                        placeholder="Digite seu CPF"
                     />
                     <InputTelefone
                         label="Telefone"
@@ -134,12 +156,18 @@ export default function TelaInicial() {
                         backgroundHover={"#9C0607"}
                         funcao={limparCampos}
                     />
-                    <BotaoComum
-                        texto={"Cadastrar"}
-                        background={"#00A722"}
-                        backgroundHover={"#007344"}
-                        funcao={submitForm}
-                    />
+                    {loading ? (
+                        <Box sx={{ display: "flex", justifyContent: "center" }}>
+                            <CircularProgress />
+                        </Box>
+                    ) : (
+                        <BotaoComum
+                            texto={"Cadastrar"}
+                            background={"#00A722"}
+                            backgroundHover={"#007344"}
+                            funcao={submitForm}
+                        />
+                    )}
                 </Box>
             </Box>
         </Box>

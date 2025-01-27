@@ -5,7 +5,7 @@
   "dockerhubPush": true,
   "port": "5173",
   "slack": "U07LFBRN95J",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "expose": "3010",
   "type": "module",
   "scripts": {
